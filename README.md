@@ -6,7 +6,7 @@ Long short-term memory (LSTM) unit is a building unit for layers of a recurrent 
 An LSTM is well-suited to classify, process and predict time series given time lags of unknown size and duration between important events. LSTMs were developed to deal with the exploding and vanishing gradient problem when training traditional RNNs.
 <img src="https://cdn-images-1.medium.com/max/1600/0*LyfY3Mow9eCYlj7o.">
 Source: [Medium](https://codeburst.io/generating-text-using-an-lstm-network-no-libraries-2dff88a3968). <br>
-The best LSTM explanation on internet: https://medium.com/deep-math-machine-learning-ai/chapter-10-1-deepnlp-lstm-long-short-term-memory-networks-with-math-21477f8e4235
+
 
 ## Components of LSTMs
 * Forget Gate “f” ( a neural network with sigmoid)
