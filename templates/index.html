@@ -1,43 +1,52 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Task Master Master</title>
+<title>LSTM Time Series Predict</title>
 {% endblock %}
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align: left">Task Master</h1>
-    {% if tasks|length < 1 %}
-    <h4 style="text-align: center">There are no tasks. Create one below!</h4>
-    {% else %}
+    <h1 style="text-align: center">Time Series Prediction</h1>
     <table>
+<!-- ................................................................................. -->
         <tr>
-            <th>Task</th>
-            <th>Added</th>
-            <th>Actions</th>
+          <td>
+            <div class="form">
+                <form action="/" method="GET">
+                  <!-- load raw data -->
+                    <input type="text" name="raw_data" id="raw_data">
+                </form>
+            </div>
+          </td>
+          <td>
+            <div class="form">
+                <form action="/" method="GET">
+                    <!-- Add Train button -->
+                    <input type="submit" value="Train Models">
+                </form>
+            </div>
+          </td>
         </tr>
-        {% for task in tasks %}
-            <tr>
-                <td>{{ task.content }}</td>
-                <td>{{ task.date_created.date() }}</td>
-                <td>
-                    <!-- refer to @app.route('/del/<int:id>') in app.py -->
-                    <a href="/del/{{task.id}}">Delete</a>
-                    <br>
-                    <!--goes to @app.route('/update/<int:id>', methods=['GET', 'POST']) in app.py-->
-                    <a href="/update/{{task.id}}">Update</a>
-                </td>
-            </tr>
-        {% endfor %}
+<!-- .................................................................................... -->
+        <tr>
+          <td>
+            <div class="form">
+                <form action="/" method="GET">
+                  <!-- load raw data -->
+                    <input type="text" name="predict" id="predict">
+                </form>
+            </div>
+          </td>
+          <td>
+            <div class="form">
+                <form action="/" method="GET">
+                    <!-- Add Train button -->
+                    <input type="submit" value="Make Predictions">
+                </form>
+            </div>
+          </td>
+        </tr>
+<!-- ..................................................................................... -->
     </table>
-    {% endif %}
-
-    <div class="form">
-        <form action="/" method="POST">
-            <input type="text" name="content" id="content">
-            <!-- Add Task button -->
-            <input type="submit" value="Add Task">
-        </form>
-    </div>
 </div>
 {% endblock %}
