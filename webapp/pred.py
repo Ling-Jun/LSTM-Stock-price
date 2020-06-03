@@ -13,8 +13,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import train
 from matplotlib import rcParams
-# # without this line, savefig() will cut off the xlabel and ylabel
-# rcParams.update({'figure.autolayout': True})
+# without this line, savefig() will cut off the xlabel and ylabel
+rcParams.update({'figure.autolayout': True})
 
 # there's a 3rd argument test_set comparing to older version of predict.py
 def test_inputs(lookback, data, test_set):
@@ -40,7 +40,7 @@ def plot_predictions(test, predicted, nameURL):
     # changed from plt.show() to plt.savefig()
     plt.savefig(nameURL)
     # savefig() doesn't save the xlabel, ylabel?
-    plt.autoscale()
+    # plt.autoscale()
     # this line also allows us to savefig() with xlabel and ylabel
     plt.close()
 

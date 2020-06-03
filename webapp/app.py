@@ -13,20 +13,26 @@ import pred
 # as a function instead of a package name
 import math
 from sklearn.metrics import mean_squared_error
-
+import os
+from os.path import isfile, join
 
 app = Flask(__name__)
 
 
 @app.route('/',methods=['GET','POST'])
 def index():
-    return render_template('index.html', models=[{'name':''}, {'name':'model_epoch_60.h5'}, {'name':'model_epoch_30.h5'}])
+    mypath = os.getcwd()+'\models'
+    # relative path of models folder
+    onlyfiles = [f for f in os.listdir(mypath) if isfile(join(mypath, f))]
+    return render_template('index.html', modelfiles = onlyfiles)
+    # read from models folder the list of models to select
+
 
 
 
 @app.route('/predict',methods=['POST', 'GET'])
 def predict():
-    file=request.values['file']
+    file = request.values['file']
     select = request.form.get('comp_select')
 
     dataset = train.read_data(file)
@@ -45,9 +51,10 @@ def predict():
     rmse = pred.return_rmse(test_set, predicted_stock_price)
     pred.plot_predictions(test_set, predicted_stock_price, nameURL = 'static/'+ str(select).replace('.h5',"")+'.png')
     # the image URL to pass on to predict.html, it has to be in a 'static' folder
-    imgname = 'static/'+ str(select).replace('.h5',"")+'.png'
-    return render_template('predict.html', model=select, rmse=rmse, imgname = imgname)
-    # image not showing!
+    imgname = 'static/'+ str(select).replace('.h5','.png')
+    return render_template('predict.html', model=select, rmse=rmse,
+                            imgname = imgname)
+    # image for 30 epochs is still not showing xlabel and ylabel
 
 
 if __name__=='__main__':

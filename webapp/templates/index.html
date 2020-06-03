@@ -73,11 +73,12 @@
           <td><input name="file"/></td>
           <td>
             <select name="comp_select" class="selectpicker form-control">
-              {% for m in models %}
-              <option value="{{ m.name }}">{{ m.name }}</option>
+              {% for m in modelfiles %}
+              <option value="{{ m }}">{{ m }}</option>
               {% endfor %}
             </select>
           </td>
+          <!-- <td> {{modelfiles}}</td> -->
         </tr>
     </table>
 		<button type="submit">Predict</button>
