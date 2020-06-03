@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!--  -->
+		<style>
+			body, html {
+			    margin: 0;
+			    font-family: sans-serif;
+			    background-color: lightblue;
+			}
+
+
+			div {
+			  	border: 0px solid black;
+			  	margin: 50px 50px 50px 50px;
+			  	background-color: lightblue;
+          width: 50%;
+			}
+
+		</style>
+<!--  -->
+		<title>Addition</title>
+</head>
+
+<!--  -->
+<!--  -->
+
+<body>
+	<div>
+  <form action="/" method="get, post">
+		<button type="submit">Back</button>
+    <br> <b>RMSE</b> is: {{rmse}} <br> Model is: {{model}} <br>
+	</form>
+  <img src={{imgname}}>
+  <!-- You need to serve the static files using a static file mapping because flask only does that when you're using the debug server.
+  We have a help page for the here: http://help.pythonanywhere.com/pages/StaticFiles/ -->
+  <!-- <img src='image.png'> -->
+  <!-- image not showing for some reason -->
+  </div>
+</body>
+</html>
