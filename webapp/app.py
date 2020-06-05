@@ -1,59 +1,75 @@
-from flask import Flask, render_template, request, url_for
-import matplotlib.pyplot as plt;plt.style.use('fivethirtyeight')
+from flask import Flask, render_template, request, url_for, session
+import matplotlib.pyplot as plt; plt.style.use('fivethirtyeight')
 # this line is different from Trial_6, it has to be this way for the code to work
-from tensorflow.keras.models import load_model # NOT: from keras.models import load_model
-from io import BytesIO #
+from tensorflow.keras.models import load_model
+# NOT: from keras.models import load_model
+from io import BytesIO
 import base64
-import numpy as np
-import pandas as pd
-import train
-import pred
-# from predict import test_inputs, but this wouldn't work because we have
-# model.predict() where predict is a function, so the computer recognizes it
-# as a function instead of a package name
-import math
-from sklearn.metrics import mean_squared_error
+import func
 import os
 from os.path import isfile, join
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 
 @app.route('/',methods=['GET','POST'])
 def index():
-    mypath = os.getcwd()+'\models'
     # relative path of models folder
-    onlyfiles = [f for f in os.listdir(mypath) if isfile(join(mypath, f))]
+    mypath = os.getcwd()+'\models'
+    onlyfiles = ['Select a model'] + [f for f in os.listdir(mypath) if isfile(join(mypath, f))]
+    # send ML models to index.html page, no value is taken from html pages
     return render_template('index.html', modelfiles = onlyfiles)
-    # read from models folder the list of models to select
-
 
 
 
 @app.route('/predict',methods=['POST', 'GET'])
 def predict():
-    file = request.values['file']
-    select = request.form.get('comp_select')
+    # ensure we choose a data file
+    try:
+        if request.method == 'POST':
+            f = request.files['file']
+            # save the uploaded file to static/data/ folder
+            f.save('static/data/'+secure_filename(f.filename))
+            # After uploading a file, change the msg on index page to
+            # 'Successfully uploaded a file!'
+            dataset = func.read_data(os.getcwd()+'/static/data/'+secure_filename(f.filename))
+    except:
+        return "Please choose a data file!"
 
-    dataset = train.read_data(file)
-    training_set, test_set = train.train_test_split(dataset)
-    train.sc.fit(training_set)
 
-    test_inputs = pred.test_inputs(60, dataset, test_set)
-    test_inputs = train.sc.transform(test_inputs)
-    X_test = pred.test_prep(60, test_inputs, test_set)   # (251, 60, 1)
+    training_set, test_set = func.train_test_split(dataset)
+    func.sc.fit(training_set)
 
-    model = load_model('models/' + str(select))
+    test_inputs = func.test_inputs(60, dataset, test_set)
+    test_inputs = func.sc.transform(test_inputs)
+    X_test = func.test_prep(60, test_inputs, test_set)   # (251, 60, 1)
+
+    # ensures we choose a model
+    try:
+        select = request.form.get('comp_select')
+        model = load_model('models/' + str(select))
+    except:
+        return "Please choose a model!"
 
     predicted_stock_price = model.predict(X_test)
-    predicted_stock_price = train.sc.inverse_transform(predicted_stock_price)
+    predicted_stock_price = func.sc.inverse_transform(predicted_stock_price)
 
-    rmse = pred.return_rmse(test_set, predicted_stock_price)
-    pred.plot_predictions(test_set, predicted_stock_price, nameURL = 'static/'+ str(select).replace('.h5',"")+'.png')
-    # the image URL to pass on to predict.html, it has to be in a 'static' folder
-    imgname = 'static/'+ str(select).replace('.h5','.png')
+    rmse = func.return_rmse(test_set, predicted_stock_price)
+
+    img = BytesIO()
+    # read ticker from ticker textbox,
+    ticker = request.form.get('ticker')
+    # what's the use of get()?
+    func.plot_predictions(test_set, predicted_stock_price, img, ticker)
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+
+
+
     return render_template('predict.html', model=select, rmse=rmse,
-                            imgname = imgname)
+                            img = plot_url)
     # image for 30 epochs is still not showing xlabel and ylabel
 
 

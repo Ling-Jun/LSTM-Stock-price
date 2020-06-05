@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May 14 11:38:50 2020
-
-@author: zhoul
-"""
-
 import argparse
 import sys
 import numpy as np
@@ -13,12 +6,15 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
-# import keras.callbacks as kcallback
-# import math
-# from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt; plt.style.use('fivethirtyeight')
+import math
+from sklearn.metrics import mean_squared_error
+import os
+from matplotlib import rcParams
+# without this line, savefig() will cut off the xlabel and ylabel
+rcParams.update({'figure.autolayout': True})
 
 
-# get raw data from path='https://raw.githubusercontent.com/Ling-Jun/LSTM-Stock-price/master/IBM_2006-01-01_to_2018-01-01.csv'
 
 def read_data(path):
     dataset = pd.read_csv(path, index_col='Date', parse_dates=['Date'])
@@ -68,26 +64,45 @@ def build(X, y, batch_size, epoch):
     return regressor
 
 
+# there's a 3rd argument test_set comparing to older version of predict.py
+def test_inputs(lookback, data, test_set):
+    # Make sure the first 60 (lookback) entires of test set have 60 previous values
+    test_inputs = data["High"][len(data["High"][:])-len(test_set) - lookback:].values.reshape(-1,1)# total length 251+60 =311
+    #shape into 1 column as indicated by '1', with an UNKNOWN row number indicated by '-1' COMPATIBLE with the original list
+    return test_inputs
+# there's a 3rd argument test_set comparing to older version of predict.py
+def test_prep(lookback,data, test_set):
+    X_test = [data[i-lookback:i,0] for i in range(lookback, lookback+len(test_set))]
+    X_test = np.array(X_test)
+    X_test = np.reshape(X_test, (X_test.shape[0],X_test.shape[1],1))#X_test.shape=(251, 60, 1)
+    return X_test
 
-# it's better practice to define all functions before if __name__=='__main__'
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Do something.")
-    #optional arguments are ID-ed by the - prefix, and the remaining arguments are assumed to be positional
-    parser.add_argument("--path", "-filepath"); parser.add_argument("--epochs", "-epoch")
-    args = parser.parse_args(sys.argv[1:])
-    dataset=read_data(args.path)
-    print('Tail of the dataset is: \n\n {}:'.format(dataset.tail()))
 
-    training_set, test_set=train_test_split(dataset)
-    dataset["High"][:'2016'].plot(figsize=(16,4),legend=True)
-    dataset["High"]['2017':].plot(figsize=(16,4),legend=True)
-    plt.legend(['Training set (Before 2017)','Test set (2017 and beyond)'])
-    plt.title('IBM stock price');plt.show()
+def newest(path):
+    files = os.listdir(path)
+    paths = [os.path.join(path, basename) for basename in files]
+    return max(paths, key=os.path.getctime)
+# ctime refers to the last metadata change for specified path in UNIX,
+# while in Windows it refers to path creation time. So in Windows it DOESN't refer
+# to the newest file in the directory
 
-    training_set_scaled = sc.fit_transform(training_set)
-    X_train, y_train=X_y_split(60) #X_train.shape=(2709, 60); y_train.shape=(2709, 1)
-    X_train, y_train=X_y_reshape(1,X_train, y_train)
-    X_train = np.reshape(X_train, (X_train.shape[0],X_train.shape[1],1)) # X_train.shape=(2709 , 60 , 1)
-    # 1st, 2nd, 3rd dimensions: the number of samples. time-steps fed to a sequence, features('price').
-    regressor= build(X_train, y_train, batch_size=50, epoch=int(args.epochs))
-    regressor.save('model_epoch_{}.h5'.format(args.epochs))
+
+def plot_predictions(test, predicted, nameURL, ticker=""):
+    plt.plot(test, color='red',label='Real Stock Price')
+    plt.plot(predicted, color='blue', label='Predicted Stock Price')
+    plt.title(str(ticker) +' Price Prediction')
+    plt.xlabel('Time')
+    plt.ylabel('Stock Price')
+    plt.legend()
+    # changed from plt.show() to plt.savefig()
+    plt.savefig(nameURL)
+    # savefig() doesn't save the xlabel, ylabel?
+    # plt.autoscale()
+    # this line also allows us to savefig() with xlabel and ylabel
+    plt.close()
+
+
+def return_rmse(test, predicted):
+    rmse = math.sqrt(mean_squared_error(test, predicted))
+    # print("The root mean squared error is {}.".format(rmse))
+    return rmse

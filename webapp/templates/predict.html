@@ -32,13 +32,10 @@
 	<div>
   <form action="/" method="get, post">
 		<button type="submit">Back</button>
-    <br> <b>RMSE</b> is: {{rmse}} <br> Model is: {{model}} <br>
+    <br> <b>RMSE</b> is: {{rmse}} <br>
+    Model is: {{model}} <br> 
 	</form>
-  <img src={{imgname}}>
-  <!-- You need to serve the static files using a static file mapping because flask only does that when you're using the debug server.
-  We have a help page for the here: http://help.pythonanywhere.com/pages/StaticFiles/ -->
-  <!-- <img src='image.png'> -->
-  <!-- image not showing for some reason -->
+  <img src="data:image/png;base64, {{ img }}">
   </div>
 </body>
 </html>
