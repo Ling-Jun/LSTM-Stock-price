@@ -20,9 +20,9 @@ def read_data(path):
     dataset = pd.read_csv(path, index_col='Date', parse_dates=['Date'])
     return dataset
 
-def train_test_split(dataset):
-    training_set = dataset[:'2016'].iloc[:,1:2].values # it is a np array
-    test_set = dataset['2017':].iloc[:,1:2].values # it is a np array
+def train_test_split(dataset, trainend='2016', teststart='2017', target_col=1):
+    training_set = dataset[:trainend].iloc[:,target_col:target_col+1].values # it is a np array
+    test_set = dataset[teststart:].iloc[:,target_col:target_col+1].values # it is a np array
     # dataset[:'2016'].iloc[:,0:2].isnull().sum() #no missing value
     return training_set, test_set
 
@@ -33,9 +33,10 @@ def X_y_split(lookback): # Use the previous 60 (lookback) values to predict 1 ou
     y_train=[training_set_scaled[i,0] for i in range(lookback, len(training_set))]
     X_train, y_train = np.array(X_train), np.array(y_train)
     return X_train, y_train
-
-def X_y_reshape(single_y_size, x, y):
-#To predict 2 consecutive prices, sing_y_size=2, so that each element in y now contains 2 numbers.
+    
+# non-default argument must be in front of default argument
+def X_y_reshape(x, y, single_y_size = 1):
+#To predict 2 consecutive prices, single_y_size=2, so that each element in y now contains 2 numbers.
     if float(single_y_size).is_integer():
         x=[x[i] for i in range(0,len(y)-len(y)%single_y_size, single_y_size)]
         y=[y[i:i+single_y_size] for i in range(0,len(y)-len(y)%single_y_size,single_y_size)]
@@ -87,6 +88,8 @@ def newest(path):
 # to the newest file in the directory
 
 
+# takes 4 parameters: test data, predicted data, nameURL-the name of image to savefig
+# ticker-if we want to specify the stock ticker
 def plot_predictions(test, predicted, nameURL, ticker=""):
     plt.plot(test, color='red',label='Real Stock Price')
     plt.plot(predicted, color='blue', label='Predicted Stock Price')

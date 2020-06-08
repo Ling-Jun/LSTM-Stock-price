@@ -54,6 +54,7 @@
 			#content {
 			    width: 50%;
 			}
+      hr {width:100%; text-align:left;margin-left:0;}
 		</style>
 <!--  -->
 		<title>Addition</title>
@@ -63,7 +64,7 @@
 <!--  -->
 
 <body>
-	<div>
+<div>
 
 <!-- action='/predict' sends the form information to /predict endpoint, or page -->
 <form action="/predict" method="post" enctype="multipart/form-data">
@@ -98,9 +99,16 @@ function selectFile(val) {alert("Uploaded a new file: " + val);}
     </table>
 
 <!-- to have predictions work, we need to enable calling droplist-value from another route() -->
-		<button type="submit">Predict</button>
+		<button type="submit" onclick="">Predict</button>
 	</form>
 
-	</div>
+  <hr>
+  Data file requirements:<br><br>
+  <li>CSV format </li>
+  <li>Index column is Date</li>
+  <li>There are several different stock prices: Open, Close, High, Low, etc. <br>
+  <span style="display:inline-block; width: 18px;"></span>
+  Each price category occupies a column. The webapp by default takes the 2nd column.</li>
+</div>
 </body>
 </html>
