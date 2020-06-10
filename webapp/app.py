@@ -1,42 +1,43 @@
-from flask import Flask, render_template, request, url_for, session
-import matplotlib.pyplot as plt; plt.style.use('fivethirtyeight')
+# python version 3.7.6
+from flask import Flask, render_template, request
+import matplotlib.pyplot as plt
 # this line is different from Trial_6, it has to be this way for the code to work
 from tensorflow.keras.models import load_model
-# NOT: from keras.models import load_model
+# from keras.models import load_model
 from io import BytesIO
 import base64
 import func
 import os
 from os.path import isfile, join
 from werkzeug.utils import secure_filename
+plt.style.use('fivethirtyeight')
 
 app = Flask(__name__)
 
 
-@app.route('/',methods=['GET','POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     # relative path of models folder
-    mypath = os.getcwd()+'\models'
+    mypath = os.getcwd() + '/models'
     onlyfiles = ['Select a model'] + [f for f in os.listdir(mypath) if isfile(join(mypath, f))]
     # send ML models to index.html page, no value is taken from html pages
-    return render_template('index.html', modelfiles = onlyfiles)
+    return render_template('index.html', modelfiles=onlyfiles)
 
 
-
-@app.route('/predict',methods=['POST', 'GET'])
+@app.route('/predict', methods=['POST', 'GET'])
 def predict():
     # ensure we choose a data file
     try:
         if request.method == 'POST':
             f = request.files['file']
             # save the uploaded file to static/data/ folder
-            f.save('static/data/'+secure_filename(f.filename))
+            f.save('static/data/' + secure_filename(f.filename))
             # After uploading a file, change the msg on index page to
             # 'Successfully uploaded a file!'
-            dataset = func.read_data(os.getcwd()+'/static/data/'+secure_filename(f.filename))
-    except:
+            dataset = func.read_data(os.getcwd() + '/static/data/' + secure_filename(f.filename))
+    except Exception:
+        # mention specific exceptions whenever possible instead of using a bare except:
         return "Please choose a data file!"
-
 
     training_set, test_set = func.train_test_split(dataset)
     func.sc.fit(training_set)
@@ -49,7 +50,7 @@ def predict():
     try:
         select = request.form.get('comp_select')
         model = load_model('models/' + str(select))
-    except:
+    except Exception:
         return "Please choose a model!"
 
     predicted_stock_price = model.predict(X_test)
@@ -65,13 +66,9 @@ def predict():
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-
-
-
-    return render_template('predict.html', model=select, rmse=rmse,
-                            img = plot_url)
+    return render_template('predict.html', model=select, rmse=rmse, img=plot_url)
     # image for 30 epochs is still not showing xlabel and ylabel
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run(debug=True)
