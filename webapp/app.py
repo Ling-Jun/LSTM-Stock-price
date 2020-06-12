@@ -1,7 +1,12 @@
 # python version 3.7.6
 from flask import Flask, render_template, request
 import matplotlib.pyplot as plt
-# this line is different from Trial_6, it has to be this way for the code to work
+import matplotlib
+# By default matplotlib uses TK gui toolkit, when you're rendering an image without
+# using the toolkit (i.e. into a file or a string-base64), matplotlib still instantiates
+# a window that doesn't get displayed, causing all kinds of problems. In order to
+# avoid that, you should use an Agg backend.
+
 from tensorflow.keras.models import load_model
 # from keras.models import load_model
 from io import BytesIO
@@ -11,7 +16,10 @@ import os
 from os.path import isfile, join
 from werkzeug.utils import secure_filename
 plt.style.use('fivethirtyeight')
-
+# use an Agg backend. https://stackoverflow.com/questions/27147300/matplotlib-tcl-asyncdelete-async-handler-deleted-by-the-wrong-thread
+matplotlib.use('Agg')
+# When using Matplotlib versions older than 3.1, it is necessary to explicitly
+# instantiate an Agg canvas
 app = Flask(__name__)
 
 

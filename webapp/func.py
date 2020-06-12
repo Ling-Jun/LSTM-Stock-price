@@ -1,18 +1,17 @@
-import argparse
 import sys
 import numpy as np
-import matplotlib.pyplot as plt; plt.style.use('fivethirtyeight')
+import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
-import matplotlib.pyplot as plt; plt.style.use('fivethirtyeight')
 import math
 from sklearn.metrics import mean_squared_error
 import os
 from matplotlib import rcParams
 # without this line, savefig() will cut off the xlabel and ylabel
 rcParams.update({'figure.autolayout': True})
+plt.style.use('fivethirtyeight')
 
 
 
@@ -33,7 +32,7 @@ def X_y_split(lookback): # Use the previous 60 (lookback) values to predict 1 ou
     y_train=[training_set_scaled[i,0] for i in range(lookback, len(training_set))]
     X_train, y_train = np.array(X_train), np.array(y_train)
     return X_train, y_train
-    
+
 # non-default argument must be in front of default argument
 def X_y_reshape(x, y, single_y_size = 1):
 #To predict 2 consecutive prices, single_y_size=2, so that each element in y now contains 2 numbers.
@@ -91,6 +90,8 @@ def newest(path):
 # takes 4 parameters: test data, predicted data, nameURL-the name of image to savefig
 # ticker-if we want to specify the stock ticker
 def plot_predictions(test, predicted, nameURL, ticker=""):
+# added plt.figure() to initiate a new figure every time we plot
+    plt.figure()
     plt.plot(test, color='red',label='Real Stock Price')
     plt.plot(predicted, color='blue', label='Predicted Stock Price')
     plt.title(str(ticker) +' Price Prediction')
