@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 14 11:38:50 2020
+Created on Thu June 14, 2020.
 
 @author: zhoul
 """
@@ -18,7 +18,7 @@ plt.style.use('fivethirtyeight')
 
 def read_data(path):
     """
-    Return data from a given path as a dataframe.
+    Read data from a given path as a dataframe.
 
     Data must be CSV with no missing values.
     """
@@ -39,23 +39,26 @@ def train_test_split(dataset, train_end='2016', test_start='2017', col=1):
     return training_set, test_set
 
 
-def plot_train_test_split(training_set, test_set, ticker='', train_end='2016', test_start='2017', col=1):
+def train_test_split_plot(dataset, ticker='', train_end='2016', test_start='2017', col=1):
     """Plot the training and testing data together."""
-    training_set, test_set = train_test_split(dataset)
-    training_set.plot(figsize=(16, 4), legend=True)
-    test_set.plot(figsize=(16, 4), legend=True)
+    column_header_list = list(dataset.columns.values)
+    dataset[column_header_list[col]][:train_end].plot(figsize=(16, 4), legend=True)
+    dataset[column_header_list[col]][test_start:].plot(figsize=(16, 4), legend=True)
+    # the following two lines will create two SEPARATE plots instead one.
+    # dataset.iloc[:, col:col + 1][:train_end].plot(figsize=(16, 4), legend=True)
+    # dataset.iloc[:, col:col + 1][test_start:].plot(figsize=(16, 4), legend=True)
     plt.legend(['Training set (Before 2017)', 'Test set (2017 and beyond)'])
     plt.title(ticker + ' Stock Price')
     plt.show()
 
 
-def sc(range=(0, 1)):
+def scale_data(range=(0, 1)):
     """Scales the data to a default range of (0, 1), range can be changed."""
     sc = MinMaxScaler(feature_range=range)
     return sc
 
 
-def X_y_split(data_set, lookback=60):
+def input_output_split(data_set, lookback=60):
     """
     Split the data_set into input and output for preprocessing.
 
@@ -63,7 +66,7 @@ def X_y_split(data_set, lookback=60):
     X - the input of a function, y - the output of a function.
     data_set can be either training_set or test_set.
     """
-    data_set_scaled = sc().fit_transform(data_set)
+    data_set_scaled = scale_data().fit_transform(data_set)
     X = [data_set_scaled[i - lookback:i, 0] for i in range(lookback, len(data_set))]
     y = [data_set_scaled[i, 0] for i in range(lookback, len(data_set))]
     X, y = np.array(X), np.array(y)
@@ -80,12 +83,12 @@ def X_y_split(data_set, lookback=60):
 #         print('Need an integer!')
 #     return np.array(x), np.array(y)
 
-def build(X):
+def build(input):
     """Build the LSTM model."""
     regressor = Sequential()
     # =======================================================================================================================
     # return_sequences: Whether to return the last output. in the output sequence, or the full sequence. Default: False.
-    regressor.add(LSTM(units=50, return_sequences=True, input_shape=(X.shape[1], 1)))
+    regressor.add(LSTM(units=50, return_sequences=True, input_shape=(input.shape[1], 1)))
     regressor.add(Dropout(0.2))
     # =======================================================================================================================
     regressor.add(LSTM(units=50, return_sequences=True))
@@ -104,9 +107,9 @@ def build(X):
     return regressor
 
 
-def train(X, y, regressor, batch_size=50, epochs=30):
+def train(input, output, regressor, batch_size=50, epochs=30):
     """Train the model and display the training preprocess."""
-    history = regressor.fit(X, y, batch_size, epochs)
+    history = regressor.fit(input, output, batch_size, epochs)
     print(history)
     return regressor
 
@@ -133,10 +136,10 @@ if __name__ == '__main__':
     dataset = read_data(args.path)
     print('Tail of the dataset is: \n\n {}:'.format(dataset.tail()))
     training_set, test_set = train_test_split(dataset)
-    # plot_train_test_split(training_set, test_set)
+    train_test_split_plot(dataset)
 
-    X_train, y_train = X_y_split(training_set)
+    train_input, train_output = input_output_split(training_set)
 
-    regressor = build(X_train)
-    regressor = train(X_train, y_train, regressor, epochs=int(args.epochs), batch_size=50)
+    regressor = build(train_input)
+    regressor = train(train_input, train_output, regressor, epochs=int(args.epochs), batch_size=50)
     save_model(regressor, args.ticker, args.epochs)
