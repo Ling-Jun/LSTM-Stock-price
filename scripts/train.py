@@ -11,6 +11,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
+from pickle import dump
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 # get raw data from path='https://raw.githubusercontent.com/Ling-Jun/LSTM-Stock-price/master/IBM_2006-01-01_to_2018-01-01.csv'
@@ -52,10 +53,12 @@ def train_test_split_plot(dataset, ticker='', train_end='2016', test_start='2017
     plt.show()
 
 
-def scale_data(range=(0, 1)):
+def scale_data_pickle_scaler(dataset, range=(0, 1)):
     """Scales the data to a default range of (0, 1), range can be changed."""
-    sc = MinMaxScaler(feature_range=range)
-    return sc
+    scaler = MinMaxScaler(feature_range=range)
+    scaled_data = scaler.fit_transform(dataset)
+    dump(scaler, open('scaler.pkl', 'wb'))
+    return scaled_data
 
 
 def input_output_split(data_set, lookback=60):
@@ -66,12 +69,13 @@ def input_output_split(data_set, lookback=60):
     X - the input of a function, y - the output of a function.
     data_set can be either training_set or test_set.
     """
-    data_set_scaled = scale_data().fit_transform(data_set)
-    X = [data_set_scaled[i - lookback:i, 0] for i in range(lookback, len(data_set))]
-    y = [data_set_scaled[i, 0] for i in range(lookback, len(data_set))]
-    X, y = np.array(X), np.array(y)
-    X = np.reshape(X, (X.shape[0], X.shape[1], 1))  # X_train.shape=(2709 , 60 , 1)
-    return X, y
+    data_set_scaled = scale_data_pickle_scaler(data_set)
+    input = [data_set_scaled[i - lookback:i, 0] for i in range(lookback, len(data_set))]
+    output = [data_set_scaled[i, 0] for i in range(lookback, len(data_set))]
+    input, output = np.array(input), np.array(output)
+    input = np.reshape(input, (input.shape[0], input.shape[1], 1))
+    # X_train.shape=(2709 , 60 , 1)
+    return input, output
 
 
 # def X_y_reshape(single_y_size, x, y):
@@ -119,7 +123,7 @@ def save_model(regressor, ticker='', epochs='UNKNOWN'):
     regressor.save('model_{}_{}_epochs.h5'.format(ticker, epochs))
 
 
-def cli_args():
+def parse_CLI_args():
     """Read arguments from CLI."""
     parser = argparse.ArgumentParser(description="Do something.")
     # optional arguments are ID-ed by the - prefix, and the remaining arguments
@@ -131,15 +135,15 @@ def cli_args():
     return args
 
 
+# It is critical that any data preparation performed on a training dataset is also
+# performed on a new dataset in the future.
 if __name__ == '__main__':
-    args = cli_args()
+    args = parse_CLI_args()
     dataset = read_data(args.path)
-    print('Tail of the dataset is: \n\n {}:'.format(dataset.tail()))
-    training_set, test_set = train_test_split(dataset)
+    # print('Tail of the dataset is: \n\n {}:'.format(dataset.tail()))
     train_test_split_plot(dataset)
-
+    training_set, test_set = train_test_split(dataset)
     train_input, train_output = input_output_split(training_set)
-
     regressor = build(train_input)
     regressor = train(train_input, train_output, regressor, epochs=int(args.epochs), batch_size=50)
     save_model(regressor, args.ticker, args.epochs)
