@@ -1,57 +1,92 @@
 """
-Created on Thu May 14 11:40:05 2020
+Created on Thu June 14, 2020.
 
 @author: zhoul
 """
 import argparse
 import sys
 import numpy as np
-import matplotlib.pyplot as plt; plt.style.use('fivethirtyeight')
-from keras.models import load_model
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
 import math
-from sklearn.preprocessing import MinMaxScaler
+# from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import train
+from pickle import load
+plt.style.use('fivethirtyeight')
 
-def test_inputs(lookback, data):
-    # Make sure the first 60 (lookback) entires of test set have 60 previous values
-    test_inputs = data["High"][len(data["High"][:])-len(test_set) - lookback:].values.reshape(-1,1)# total length 251+60 =311
-    #shape into 1 column as indicated by '1', with an UNKNOWN row number indicated by '-1' COMPATIBLE with the original list
-    return test_inputs
 
-def test_prep(lookback,data):
-    X_test = [data[i-lookback:i,0] for i in range(lookback,lookback+len(test_set))]; X_test = np.array(X_test)
-    X_test = np.reshape(X_test, (X_test.shape[0],X_test.shape[1],1))#X_test.shape=(251, 60, 1)
-    return X_test
+def create_test_input(dataset, scaler, input_start='2017', lookback=60, col=1):
+    """
+    Generate a test input dataset from a given dataset.
 
-def plot_predictions(test,predicted):
-    plt.plot(test, color='red',label='Real IBM Stock Price')
-    plt.plot(predicted, color='blue',label='Predicted IBM Stock Price')
-    plt.title('IBM Stock Price Prediction')
+    Use this function only if the given dataset contains data for training the models.
+    lookback -> the number of historical values we need to predict one future value.
+    """
+    column_header_list = list(dataset.columns.values)
+    target_col = column_header_list[col]
+    length_of_test_output = len(dataset[target_col][input_start:])  # 251
+    # the row number below which is the test_input dataframe
+    start_of_test_input = len(dataset[target_col][:]) - length_of_test_output - lookback  # 2709
+    test_input_ungrouped = dataset[target_col][start_of_test_input:].values.reshape(-1, 1)
+    # total number of rows for test_input: 251+60 =311
+    test_input = [test_input_ungrouped[i - lookback:i, 0] for i in range(lookback, len(test_input_ungrouped))]
+    test_input = np.array(test_input)
+    # --------------------------------------------
+    test_input = scaler.transform(test_input)
+    # --------------------------------------------
+    test_input = np.reshape(test_input, (test_input.shape[0], test_input.shape[1], 1))
+    # X_test.shape=(251, 60, 1)
+    return test_input
+
+
+# def scale_data(train_path):
+#     """Adjust the scaler according to training data."""
+#     dataset = train.read_data(train_path)
+#     training_set, test_set = train.train_test_split(dataset)
+#     train.scale_data().fit(training_set)
+
+
+def predict(input, model, scaler):
+    """Predict the price."""
+    model = load_model(model)
+    prediction = model.predict(input)
+    prediction = scaler.inverse_transform(prediction)
+    return prediction
+
+
+def plot_predictions(target, prediction, ticker=''):
+    """Plot predicted & real price."""
+    plt.plot(target, color='red', label='Real Price')
+    plt.plot(prediction, color='blue', label='Predicted Price')
+    plt.title(ticker + ' Stock Price Prediction')
     plt.xlabel('Time')
-    plt.ylabel('IBM Stock Price')
+    plt.ylabel('Price')
     plt.legend()
     plt.show()
 
-def return_rmse(test,predicted):
-    rmse = math.sqrt(mean_squared_error(test, predicted))
+
+def return_rmse(target, prediction):
+    """Return the RMSE between prediction and target."""
+    rmse = math.sqrt(mean_squared_error(target, prediction))
     print("The root mean squared error is {}.".format(rmse))
 
-if __name__ == '__main__':
+
+def parse_CLI_args():
+    """Parse CLI arguments for predict.py."""
     parser = argparse.ArgumentParser(description="Do something.")
-    #optional arguments are ID-ed by the - prefix, and the remaining arguments are assumed to be positional
-    parser.add_argument("--path", "-file_path"); parser.add_argument("--model", "-model")
+    parser.add_argument("--path", "-path")
+    parser.add_argument("--model", "-model")
     args = parser.parse_args(sys.argv[1:])
-    dataset=train.read_data(args.path)
-    training_set, test_set=train.train_test_split(dataset)
-    train.sc.fit(training_set)
+    return args
 
-    test_inputs=test_inputs(60, dataset)
-    test_inputs  = train.sc.transform(test_inputs)
-    X_test=test_prep(60,test_inputs) # (251, 60, 1)
 
-    model=load_model(args.model)
-    predicted_stock_price = model.predict(X_test)
-    predicted_stock_price = train.sc.inverse_transform(predicted_stock_price)
-    return_rmse(test_set,predicted_stock_price)
-    plot_predictions(test_set,predicted_stock_price)
+if __name__ == '__main__':
+    args = parse_CLI_args()
+    dataset = train.read_data(args.path)
+    _, test_set = train.train_test_split(dataset)
+    scaler = load(open('scaler.pkl', 'rb'))
+    test_input = create_test_input(dataset, scaler)
+    prediction = predict(test_input, args.model, scaler)
+    return_rmse(test_set, prediction)
+    plot_predictions(test_set, prediction)
