@@ -55,9 +55,9 @@ def predict(input, model, scaler):
     return prediction
 
 
-def plot_predictions(test, prediction, ticker=''):
+def plot_predictions(target, prediction, ticker=''):
     """Plot predicted & real price."""
-    plt.plot(test, color='red', label='Real Price')
+    plt.plot(target, color='red', label='Real Price')
     plt.plot(prediction, color='blue', label='Predicted Price')
     plt.title(ticker + ' Stock Price Prediction')
     plt.xlabel('Time')
