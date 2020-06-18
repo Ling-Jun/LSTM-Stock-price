@@ -2,9 +2,9 @@
 from flask import Flask, render_template, request
 import matplotlib.pyplot as plt
 import matplotlib
-
 from pickle import load
-import predict
+# import predict
+from script import predict, train, preload
 
 plt.style.use('fivethirtyeight')
 matplotlib.use('Agg')
@@ -23,28 +23,27 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # relative path of models folder
-    onlyfiles = predict.list_models('/models')
+    onlyfiles = preload.list_models('/models')
     # send ML models to index.html page, no value is taken from html pages
     return render_template('index.html', modelfiles=onlyfiles)
 
 
 @app.route('/predict', methods=['POST', 'GET'])
 def pred():
-    # if request.method == 'POST':
-    file = request.files['file']
-    dataset = predict.load_data(file)
+    file = request.files.get('file')
+    ticker = request.form.get('ticker')
+    select = request.form.get('comp_select')
+
+    dataset = preload.load_data(file)
+    model = preload.choose_model(select)
     scaler = load(open('scaler.pkl', 'rb'))
     test_input = predict.create_test_input(dataset, scaler)
-    select = request.form.get('comp_select')
-    model = predict.choose_model(select)
     prediction = predict.predict(test_input, model, scaler)
-    test_set = predict.create_test_set(dataset)
+    _, test_set = train.train_test_split(dataset)
     rmse = predict.return_rmse(test_set, prediction)
     # read ticker from ticker textbox,
-    ticker = request.form.get('ticker')
     plot_url = predict.plot_predictions(test_set, prediction, ticker)
     return render_template('predict.html', model=select, rmse=rmse, img=plot_url)
-    # image for 30 epochs is still not showing xlabel and ylabel
 
 
 if __name__ == '__main__':

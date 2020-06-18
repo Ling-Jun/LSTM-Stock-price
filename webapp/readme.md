@@ -10,6 +10,8 @@ Set up environment
 >
     $ conda activate env_name
 
+* Install Python 3.7.6
+
 * Install dependencies with pip:
 
 >
