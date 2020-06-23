@@ -1,4 +1,4 @@
-# python version 3.7.6
+"""Python version 3.7.6 ."""
 from flask import Flask, render_template, request
 import matplotlib.pyplot as plt
 import matplotlib
@@ -39,10 +39,10 @@ def pred():
     scaler = load(open('scaler.pkl', 'rb'))
     test_input = predict.create_test_input(dataset, scaler)
     prediction = predict.predict(test_input, model, scaler)
-    _, test_set = train.train_test_split(dataset)
-    rmse = predict.return_rmse(test_set, prediction)
+    _, test_target = train.train_test_split(dataset)
+    rmse = predict.return_rmse(test_target, prediction)
     # read ticker from ticker textbox,
-    plot_url = predict.plot_predictions(test_set, prediction, ticker)
+    plot_url = predict.plot_predictions(test_target, prediction, ticker)
     return render_template('predict.html', model=select, rmse=rmse, img=plot_url)
 
 

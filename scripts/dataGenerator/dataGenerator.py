@@ -1,8 +1,9 @@
 """Create a dataframe of historical price from a ticker."""
 import yfinance as yf
 import argparse
-import sys
+import os
 import numpy as np
+# import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 # set seed for reproducibility
@@ -16,7 +17,7 @@ def stock_info(ticker):
     return info
 
 
-def price_DF(ticker):
+def data_fetch(ticker):
     """Create price dataframe from a ticker."""
     stock = yf.Ticker(ticker)
     # get historical market data
@@ -40,12 +41,19 @@ def data_clean(dataframe):
     return dataframe
 
 
+def data_to_CSV(df, ticker):
+    """Save data in a CSV file."""
+    cwd = os.getcwd()
+    path = cwd + '/' + str(ticker) + '_price.csv'
+    df.to_csv(str(path), index=True, header=True)
+
+
 def parse_CLI_args():
     """Parse CLI arguments for predict.py."""
     parser = argparse.ArgumentParser(description="Generate price data.")
     parser.add_argument("--ticker", "-ticker", "-t")
-    # parser.add_argument("--model", "-model")
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args()
+    #  can call parse_args() with no arguments and it will still work
     return args
 
 
@@ -54,8 +62,13 @@ def parse_CLI_args():
 if __name__ == '__main__':
     args = parse_CLI_args()
     ticker = args.ticker
-    price_history = price_DF(ticker)
+    price_history = data_fetch(ticker)
     price_history = data_clean(price_history)
-    print(price_history.shape)
-    print('=================================================')
-    # print(price_history.info())
+    # print(price_history.head(20))
+    # print('=================================================')
+    # info = stock_info(ticker)
+    # s = pd.Series(info, index=info.keys())
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+    #     # display full pd series without truncation
+    #     print(s)
+    data_to_CSV(price_history, ticker)
