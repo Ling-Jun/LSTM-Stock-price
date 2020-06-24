@@ -61,26 +61,26 @@ def data_split_point(start, end, ratio=0.1):
     return split_point
 
 
-def parse_CLI_args():
-    """Parse CLI arguments for predict.py."""
-    parser = argparse.ArgumentParser(description="Generate price data.")
-    parser.add_argument("--ticker", "-ticker", "-t")
-    args = parser.parse_args()
-    #  can call parse_args() with no arguments and it will still work
-    return args
-
-
-if __name__ == '__main__':
-    args = parse_CLI_args()
-    ticker = args.ticker
-    price_history = data_fetch(ticker)
-    price_history = data_clean(price_history)
-    start, end = data_year_range(price_history)
-    split_point = data_split_point(start, end)
-    training_set, test_set = train_test_split(price_history, train_end=str(split_point - 1), test_start=str(split_point))
-    train_test_split_plot(price_history, train_end=str(split_point - 1), test_start=str(split_point))
-    print(price_history.head(500))
-    print(price_history.index.year)
-    print('start:', start, '\n', 'end:', end)
-    print(data_split_point(start, end))
-    print(round(2.9, 0))
+# def parse_CLI_args():
+#     """Parse CLI arguments for predict.py."""
+#     parser = argparse.ArgumentParser(description="Generate price data.")
+#     parser.add_argument("--ticker", "-ticker", "-t")
+#     args = parser.parse_args()
+#     #  can call parse_args() with no arguments and it will still work
+#     return args
+#
+#
+# if __name__ == '__main__':
+#     args = parse_CLI_args()
+#     ticker = args.ticker
+#     price_history = data_fetch(ticker)
+#     price_history = data_clean(price_history)
+#     start, end = data_year_range(price_history)
+#     split_point = data_split_point(start, end)
+#     training_set, test_set = train_test_split(price_history, train_end=str(split_point - 1), test_start=str(split_point))
+#     train_test_split_plot(price_history, train_end=str(split_point - 1), test_start=str(split_point))
+    # print(price_history.head(500))
+    # print(price_history.index.year)
+    # print('start:', start, '\n', 'end:', end)
+    # print(data_split_point(start, end))
+    # print(round(2.9, 0))

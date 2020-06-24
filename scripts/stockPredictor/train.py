@@ -50,7 +50,12 @@ def train_test_split_plot(dataset, ticker='', train_end='2016', test_start='2017
     # dataset.iloc[:, col:col + 1][test_start:].plot(figsize=(16, 4), legend=True)
     plt.legend(['Training set (Before 2017)', 'Test set (2017 and beyond)'])
     plt.title(ticker + ' Stock Price')
-    plt.show()
+    plt.show(block=False)
+    # https://stackoverflow.com/questions/458209/is-there-a-way-to-detach-matplotlib-plots-so-that-the-computation-can-continue/56982302#56982302
+    # Stop blocking execution, so that the code can continue to run after plot
+    # window shows. If I simply call show(), the result is plotted properly but
+    # execution is blocked until the window is closed.
+    plt.close()
 
 
 def scale_data_pickle_scaler(dataset, range=(0, 1)):
