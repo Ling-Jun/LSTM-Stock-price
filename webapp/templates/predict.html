@@ -31,10 +31,15 @@
 <body>
 	<div>
   <form action="/" method="get, post">
-		<button type="submit">Back</button>
-    <br> <b>RMSE</b> is: {{rmse}} <br>
-    Model is: {{model}} <br> 
+  <!--Form Action attribute specifies where to send the form-data when a form is submitted -->
+	<button type="submit">Back</button>
 	</form>
+  
+  <br>
+  <b>RMSE</b> is: {{rmse}}
+  <br>
+  Model is: {{model}}
+  <br>
   <img src="data:image/png;base64, {{ img }}">
   </div>
 </body>

@@ -9,6 +9,10 @@ import math
 from sklearn.metrics import mean_squared_error
 from io import BytesIO
 import base64
+from matplotlib import rcParams
+
+rcParams.update({'figure.autolayout': True})
+# scale the plot to show axis labels
 plt.style.use('fivethirtyeight')
 
 
@@ -62,8 +66,6 @@ def plot_predictions(target, predicted, ticker=""):
     plt.ylabel('Stock Price')
     plt.legend()
     plt.savefig(img)
-    # plt.autoscale()
-    # this line also allows us to savefig() with xlabel and ylabel
     plt.close()
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue()).decode('utf8')
