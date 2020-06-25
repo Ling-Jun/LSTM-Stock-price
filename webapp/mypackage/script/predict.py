@@ -3,11 +3,8 @@ Created on Thu June 14, 2020.
 
 @author: zhoul
 """
-# import argparse
-# import sys
 import numpy as np
 import matplotlib.pyplot as plt
-# from tensorflow.keras.models import load_model
 import math
 from sklearn.metrics import mean_squared_error
 from io import BytesIO
@@ -39,13 +36,6 @@ def create_test_input(dataset, scaler, input_start='2017', lookback=60, col=1):
     return test_input
 
 
-# def scale_data(train_path):
-#     """Adjust the scaler according to training data."""
-#     dataset = train.read_data(train_path)
-#     training_set, test_set = train.train_test_split(dataset)
-#     train.scale_data().fit(training_set)
-
-
 def predict(input, model, scaler):
     """Predict the price."""
     # model = load_model(model)
@@ -54,15 +44,6 @@ def predict(input, model, scaler):
     return prediction
 
 
-# def plot_predictions(target, prediction, ticker=''):
-#     """Plot predicted & real price."""
-#     plt.plot(target, color='red', label='Real Price')
-#     plt.plot(prediction, color='blue', label='Predicted Price')
-#     plt.title(ticker + ' Stock Price Prediction')
-#     plt.xlabel('Time')
-#     plt.ylabel('Price')
-#     plt.legend()
-#     plt.show()
 def plot_predictions(target, predicted, ticker=""):
     """
     Plot prediction and target prices.
@@ -92,24 +73,5 @@ def plot_predictions(target, predicted, ticker=""):
 def return_rmse(target, prediction):
     """Return the RMSE between prediction and target."""
     rmse = math.sqrt(mean_squared_error(target, prediction))
-    print("The root mean squared error is {}.".format(rmse))
-
-
-# def parse_CLI_args():
-#     """Parse CLI arguments for predict.py."""
-#     parser = argparse.ArgumentParser(description="Do something.")
-#     parser.add_argument("--path", "-path")
-#     parser.add_argument("--model", "-model")
-#     args = parser.parse_args(sys.argv[1:])
-#     return args
-
-
-# if __name__ == '__main__':
-#     args = parse_CLI_args()
-#     dataset = train.read_data(args.path)
-#     _, test_set = train.train_test_split(dataset)
-#     scaler = load(open('scaler.pkl', 'rb'))
-#     test_input = create_test_input(dataset, scaler)
-#     prediction = predict(test_input, args.model, scaler)
-#     return_rmse(test_set, prediction)
-#     plot_predictions(test_set, prediction)
+    # print("The root mean squared error is {}.".format(rmse))
+    return rmse

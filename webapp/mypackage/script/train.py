@@ -12,6 +12,8 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
 from pickle import dump
+from io import BytesIO
+import base64
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 # get raw data from path='https://raw.githubusercontent.com/Ling-Jun/LSTM-Stock-price/master/IBM_2006-01-01_to_2018-01-01.csv'
@@ -42,15 +44,18 @@ def train_test_split(dataset, train_end='2016', test_start='2017', col=1):
 
 def train_test_split_plot(dataset, ticker='', train_end='2016', test_start='2017', col=1):
     """Plot the training and testing data together."""
+    img = BytesIO()
+    plt.figure()
     column_header_list = list(dataset.columns.values)
     dataset[column_header_list[col]][:train_end].plot(figsize=(16, 4), legend=True)
     dataset[column_header_list[col]][test_start:].plot(figsize=(16, 4), legend=True)
-    # the following two lines will create two SEPARATE plots instead one.
-    # dataset.iloc[:, col:col + 1][:train_end].plot(figsize=(16, 4), legend=True)
-    # dataset.iloc[:, col:col + 1][test_start:].plot(figsize=(16, 4), legend=True)
-    plt.legend(['Training set (Before 2017)', 'Test set (2017 and beyond)'])
+    plt.legend(['Training set', 'Test set'])
     plt.title(ticker + ' Stock Price')
-    plt.show()
+    plt.savefig(img)
+    plt.close()
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+    return plot_url
 
 
 def scale_data_pickle_scaler(dataset, range=(0, 1)):
@@ -77,15 +82,6 @@ def input_output_split(data_set, lookback=60):
     # X_train.shape=(2709 , 60 , 1)
     return input, output
 
-
-# def X_y_reshape(single_y_size, x, y):
-# #To predict 2 consecutive prices, sing_y_size=2, so that each element in y now contains 2 numbers.
-#     if float(single_y_size).is_integer():
-#         x=[x[i] for i in range(0,len(y)-len(y)%single_y_size, single_y_size)]
-#         y=[y[i:i+single_y_size] for i in range(0,len(y)-len(y)%single_y_size,single_y_size)]
-#     else:
-#         print('Need an integer!')
-#     return np.array(x), np.array(y)
 
 def build(input):
     """Build the LSTM model."""
@@ -121,29 +117,3 @@ def train(input, output, regressor, batch_size=50, epochs=30):
 def save_model(regressor, ticker='', epochs='UNKNOWN'):
     """Save the trained models, with default unkown epochs."""
     regressor.save('model_{}_{}_epochs.h5'.format(ticker, epochs))
-
-
-# def parse_CLI_args():
-#     """Read arguments from CLI."""
-#     parser = argparse.ArgumentParser(description="Do something.")
-#     # optional arguments are ID-ed by the - prefix, and the remaining arguments
-#     # are assumed to be positional
-#     parser.add_argument("--path", "-path")
-#     parser.add_argument("--epochs", "-epoch")
-#     parser.add_argument("--ticker", "-ticker")
-#     args = parser.parse_args(sys.argv[1:])
-#     return args
-
-
-# It is critical that any data preparation performed on a training dataset is also
-# performed on a new dataset in the future.
-# if __name__ == '__main__':
-#     args = parse_CLI_args()
-#     dataset = read_data(args.path)
-#     # print('Tail of the dataset is: \n\n {}:'.format(dataset.tail()))
-#     train_test_split_plot(dataset)
-#     training_set, test_set = train_test_split(dataset)
-#     train_input, train_output = input_output_split(training_set)
-#     regressor = build(train_input)
-#     regressor = train(train_input, train_output, regressor, epochs=int(args.epochs), batch_size=50)
-#     save_model(regressor, args.ticker, args.epochs)

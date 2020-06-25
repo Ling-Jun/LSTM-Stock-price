@@ -38,7 +38,7 @@ def load_data(file):
 
 
 def choose_model(select):
-    # ensures we choose a model
+    """Make sure we choose a model."""
     try:
         model = load_model('models/' + str(select))
     except Exception:
