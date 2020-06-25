@@ -1,6 +1,28 @@
-# LSTM-Stock-price
+# Web-App for LSTM powered stock prediction
 
-## Long Short-Term Memory(LSTM)
+## Development
+Set up environment
+
+* Setup up virtual environment with Anaconda, or VENV
+
+>
+    $ conda create --name env_name
+>
+    $ conda activate env_name
+
+* Install Python 3.7.6
+
+* Install dependencies with pip:
+
+>
+    $ pip install -r requirements.txt
+
+## Dataset
+* We now allow users to provide a simple stock ticker, the price data will be fetched from Yahoo finance.
+
+
+
+# Background Information on Long Short-Term Memory(LSTM)
 Long short-term memory (LSTM) unit is a building unit for layers of a recurrent neural network (RNN). A **RNN** composed of LSTM units is often called an LSTM network. A common LSTM unit is composed of a cell, an input gate, an output gate and a forget gate. The cell is responsible for "remembering" values over arbitrary time intervals; hence the word "memory" in LSTM. Each of the three gates can be thought of as a "conventional" artificial neuron, as in a multi-layer (or feedforward) neural network.
 
 An LSTM is well-suited to classify, process and predict time series given time lags of unknown size and duration between important events. LSTMs were developed to deal with the exploding and vanishing gradient problem when training traditional RNNs.
