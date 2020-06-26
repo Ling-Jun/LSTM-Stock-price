@@ -1,9 +1,0 @@
-tensorflow==2.0.1
-matplotlib==3.2.1
-Keras==2.3.1
-pandas==1.0.4
-numpy==1.18.5
-Werkzeug==1.0.1
-Flask==1.1.2
-scikit_learn==0.23.1
--e ./mypackage
