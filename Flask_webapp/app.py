@@ -10,13 +10,15 @@ matplotlib.use('Agg')
 
 app = Flask(__name__)
 
+onlyfiles = preload.list_models('/Flask_webapp/models')
+string = ""
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # relative path of models folder
     onlyfiles = preload.list_models('/Flask_webapp/models')
     # send ML models to index.html page, no value is taken from html pages
-    return render_template('index.html', modelfiles=onlyfiles)
+    return render_template('index.html', modelfiles=onlyfiles, string=string)
 
 
 @app.route('/predict', methods=['POST', 'GET'])
@@ -24,13 +26,13 @@ def pred():
     # if ticker not in request.form:
     ticker = request.form.get('ticker')
     select = request.form.get('comp_select')
-
     try:
         dataset = dataGenerator.data_fetch(ticker)
     # except ImportError:
     #     return "Please add a ticker!!"
     except Exception:
-        return "Invalid ticker!!"
+        # return "Invalid ticker!!"
+        return render_template('index.html', modelfiles=onlyfiles, string="ENTER A VALID TICKER!")
     # process the dataset
     dataset = dataGenerator.data_clean(dataset)
     start, end = dataGenerator.data_year_range(dataset)
@@ -41,8 +43,8 @@ def pred():
     try:
         model = preload.choose_model(select)
     except ImportError:
-        return "Please choose a model!!"
-
+        # return "Please choose a model!!"
+        return render_template('index.html', modelfiles=onlyfiles, string="PLEASE CHOOSE A MODEL!")
     scaler = load(open('Flask_webapp/data_preparation_objects/scaler.pkl', 'rb'))
     # specify the right path
     test_input = predict.create_test_input(dataset, scaler, input_start=str(split_point))
