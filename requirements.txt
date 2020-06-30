@@ -1,3 +1,4 @@
+yfinance==0.1.54
 tensorflow==2.0.1
 matplotlib==3.2.1
 Keras==2.3.1
