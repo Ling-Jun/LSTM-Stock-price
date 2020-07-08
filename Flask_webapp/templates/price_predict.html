@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!--  -->
+<style>
+	body, html {margin: 0; font-family: sans-serif;}
+	.content {margin:  auto; width: 400px;}
+	table, td, th {border: 1px solid #aaa;}
+	table {border-collapse: collapse; width: 50%;}
+	table.center {text-align: center; margin-left: auto; margin-right: auto;}
+	th {height: 30px;}
+	td {text-align: center; padding: 5px;}
+	.form {margin-top: 20px;}
+	/* .big-container {text-align: center;} */
+	.user-manual {text-align: left; padding: 0 0 0 200px;}
+	#content {width: 50%;}
+	hr.class-2 {border-top: 5px double #8c8b8b;}
+</style>
+<!--  -->
+<title>Stock Prediction</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/stock_predict.js') }}"></script>
+</head>
+
+<!--  -->
+<!--  -->
+
+<body>
+<div class="big-container">
+<form method="post" enctype="multipart/form-data">
+	<br><br><br><br>
+<table class="center">
+	<tr><td>Ticker Name </td><td>Select Model</td></tr>
+  <tr>
+    <td><input type = 'text' name = 'ticker' id='tickerInput'/></td>
+    <td>
+    <select name="comp_select" id='modelInput'>
+    {% for m in modelfiles %}
+    <option value="{{ m }}">{{ m }}</option>
+    {% endfor %}
+    </select>
+    </td>
+  </tr>
+</table>
+</div>
+
+<input type="button" onclick="location.href='/';" value="Back" />
+<button type="submit" onclick="">Predict</button>
+</form>
+<hr class="class-2" />
+<!-- .......................................................... -->
+<div id="successAlert" role="alert" style="display:none;"></div>
+<div id="errorMsg" role="alert" style="display:none;"></div>
+
+<!-- <div>
+<form action="/" method="get, post">
+<button type="submit">Back</button>
+</form>
+<br>
+<b>RMSE</b> is: {{rmse}}
+<br>
+Model is: {{model}}
+<br>
+<img src="data:image/png;base64, {{ img }}">
+</div> -->
+
+<br><br><br><br>
+<div class="user-manual">
+	How to use this stock predictor:<br><br>
+	<li>Provide a valid stock ticker.</li>
+	<li>Select a model. </li>
+</div>
+</body>
+</html>
