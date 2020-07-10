@@ -7,34 +7,12 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <!--  -->
 <style>
-	body, html {
-	    margin: 0;
-	    font-family: sans-serif;
-	    background-color: lightblue;
+	form.form-class {text-align: center;}
+	hr.hr-class {border-top: 5px double #8c8b8b;}
+	div.errorMsg-class {
+		font-weight: bold; text-align: center; font-size: 25px;
+		background-color: rgba(255, 0, 0, 0.3); 
 	}
-
-	.content {
-	    margin:  auto;
-	    width: 400px;
-	}
-
-	div {
-	  	border: 0px solid black;
-	  	margin: 25px 50px 75px 100px;
-	  	background-color: lightblue;
-	}
-
-	.form {
-	    margin-top: 20px;
-	}
-
-  /* input[type='file'] {color: red;} */
-
-	#content {
-	    width: 50%;
-	}
-  hr {width:100%; text-align:left;margin-left:0;}
-	p {text-align: center;}
 </style>
 <!--  -->
 <title>Stock Information</title>
@@ -46,25 +24,25 @@
 <!--  -->
 <!--  -->
 <body>
-	<div>
-		<br><br><br><br>
-		<form>
-	    <label for="tickerInput">Ticker: </label>
-	    <input type="text" id="tickerInput" placeholder="Stock Ticker">
-		  <button type="submit">Submit</button>
-		</form>
-		<br>
-		<div id="successAlert" role="alert" style="display:none;"></div>
-		<div id="errorAlert" role="alert" style="display:none;"></div>
-	</div>
-
-	<br><br>
-	<div>STILL DOESN"t catch the wrong ticker ERROR!!</div>
+<div>
+	<br><br><br><br>
+	<form class="form-class">
+    <label for="tickerInput">Ticker: </label>
+    <input type="text" id="tickerInput" placeholder="Stock Ticker">
+	  <button type="submit">Submit</button>
+	</form>
+	<br>
+	<div id="successAlert" role="alert" style="display:none;"></div>
+	<div class="errorMsg-class" id="errorAlert" role="alert" style="display:none;"></div>
+</div>
+<hr class="hr-class" />
+<br><br>
+<div>STILL DOESN"t catch the wrong ticker ERROR!!</div>
 
 <!-- New division -->
 <br>
 <div>
-<input type="button" onclick="location.href='/price_predict';" value="Predict Stock Price" />
+<input type="button" onclick="location.href='/price_predict';" value="Go to Predict Stock Price" />
 </div>
 </body>
 </html>

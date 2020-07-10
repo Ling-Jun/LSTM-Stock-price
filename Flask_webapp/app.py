@@ -29,7 +29,7 @@ def process():
         # think of better ways to present the stock info!
         return jsonify(info)
 
-    return jsonify({'error': 'Invalid ticker!'})
+    return jsonify({'error': 'ENTER A VALID TICKER!'})
 
 
 @app.route('/price_predict', methods=['GET', 'POST'])
@@ -45,40 +45,36 @@ def show_pred():
     # get the form from stock_predict.js
     ticker = request.form['ticker']
     select = request.form['model']
-    if ticker and (select != 'Select a model'):
-        # do sth
-        return jsonify({'ticker': ticker, 'model': select})
-    return jsonify({'error': 'Invalid ticker or model selection!'})
 
-    # try:
-    #     dataset = dataGenerator.data_fetch(ticker)
-    # # except ImportError:
-    # #     return "Please add a ticker!!"
-    # except Exception:
-    #     # return "Invalid ticker!!"
-    #     return render_template('price_predict.html', modelfiles=onlyfiles, string="ENTER A VALID TICKER!")
-    # # process the dataset
-    # dataset = dataGenerator.data_clean(dataset)
-    # start, end = dataGenerator.data_year_range(dataset)
-    # split_point = dataGenerator.data_split_point(start, end, ratio=0.1)
-    # _, test_target = train.train_test_split(dataset, train_end=str(split_point - 1), test_start=str(split_point))
-    #
-    # # load models and data transfomation objects
-    # try:
-    #     model = preload.choose_model(select)
-    # except ImportError:
-    #     # return "Please choose a model!!"
-    #     return render_template('price_predict.html', modelfiles=onlyfiles, string="PLEASE CHOOSE A MODEL!")
-    # scaler = load(open('Flask_webapp/data_preparation_objects/scaler.pkl', 'rb'))
-    # # specify the right path
-    # test_input = predict.create_test_input(dataset, scaler, input_start=str(split_point))
-    #
-    # # predict
-    # prediction = predict.predict(test_input, model, scaler)
-    # rmse = predict.return_rmse(test_target, prediction)
-    # # read ticker from ticker textbox,
-    # plot_url = predict.plot_predictions(test_target, prediction, ticker)
-    # return render_template('show_prediction.html', model=select, rmse=rmse, img=plot_url)
+# if ticker and (select != 'Select a model'):
+    try:
+        dataset = dataGenerator.data_fetch(ticker)
+    except Exception:
+        return jsonify({'error': "ENTER A VALID TICKER!"})
+
+    # process the dataset
+    dataset = dataGenerator.data_clean(dataset)
+    start, end = dataGenerator.data_year_range(dataset)
+    split_point = dataGenerator.data_split_point(start, end, ratio=0.1)
+    _, test_target = train.train_test_split(dataset, train_end=str(split_point - 1), test_start=str(split_point))
+
+    # load models and data transfomation objects
+    try:
+        model = preload.choose_model(select)
+    except ImportError:
+        # return "Please choose a model!!"
+        return jsonify({'error': "PLEASE CHOOSE A MODEL!"})
+    scaler = load(open('Flask_webapp/data_preparation_objects/scaler.pkl', 'rb'))
+    # specify the right path
+    test_input = predict.create_test_input(dataset, scaler, input_start=str(split_point))
+
+    # predict
+    prediction = predict.predict(test_input, model, scaler)
+    rmse = predict.return_rmse(test_target, prediction)
+    # read ticker from ticker textbox,
+    plot_url = predict.plot_predictions(test_target, prediction, ticker)
+    # Pass the Base64 encoded image as JSON object, reconstruct the image in .js file 
+    return jsonify({'rmse': rmse, 'ticker': ticker, 'model': select, "img": plot_url})
 
 
 if __name__ == '__main__':
