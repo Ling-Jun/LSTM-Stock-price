@@ -11,7 +11,7 @@
 	hr.hr-class {border-top: 5px double #8c8b8b;}
 	div.errorMsg-class {
 		font-weight: bold; text-align: center; font-size: 25px;
-		background-color: rgba(255, 0, 0, 0.3); 
+		background-color: rgba(255, 0, 0, 0.3);
 	}
 </style>
 <!--  -->
@@ -31,18 +31,18 @@
     <input type="text" id="tickerInput" placeholder="Stock Ticker">
 	  <button type="submit">Submit</button>
 	</form>
-	<br>
-	<div id="successAlert" role="alert" style="display:none;"></div>
-	<div class="errorMsg-class" id="errorAlert" role="alert" style="display:none;"></div>
 </div>
 <hr class="hr-class" />
-<br><br>
-<div>STILL DOESN"t catch the wrong ticker ERROR!!</div>
+<div id="successAlert" role="alert" style="display:none;">
+<!-- display stock info -->
+</div>
+<div class="errorMsg-class" id="errorAlert" role="alert" style="display:none;"></div>
 
 <!-- New division -->
 <br>
 <div>
-<input type="button" onclick="location.href='/price_predict';" value="Go to Predict Stock Price" />
+<a href="/price_predict"><button>Go to predict stock price</button></a>
+<!-- <input type="button" onclick="location.href='/price_predict';" value="Go to Predict Stock Price" /> -->
 </div>
 </body>
 </html>

@@ -12,7 +12,8 @@ $(document).ready(function() {
 				$('#successAlert').hide();
 			}
 			else {
-				$('#successAlert').text(JSON.stringify(data)).show();
+				// $('#successAlert').text(JSON.stringify(data)).show();
+				$('#successAlert').html(data).show();
 				$('#errorAlert').hide();
 			}
 		});
