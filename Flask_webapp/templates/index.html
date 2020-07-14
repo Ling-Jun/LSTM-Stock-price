@@ -7,100 +7,42 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <!--  -->
 <style>
-	body, html {
-	    margin: 0;
-	    font-family: sans-serif;
-	    background-color: lightblue;
+	form.form-class {text-align: center;}
+	hr.hr-class {border-top: 5px double #8c8b8b;}
+	div.errorMsg-class {
+		font-weight: bold; text-align: center; font-size: 25px;
+		background-color: rgba(255, 0, 0, 0.3);
 	}
-
-	.content {
-	    margin:  auto;
-	    width: 400px;
-	}
-
-	div {
-	  	border: 0px solid black;
-	  	margin: 25px 50px 75px 100px;
-	  	background-color: lightblue;
-	}
-
-	table, td, th {
-	    border: 1px solid #aaa;
-	}
-
-	table {
-	    border-collapse: collapse;
-	    width: 50%;
-	}
-	table.center {
-			margin-left: auto;
-			margin-right: auto;
-	}
-
-	th {
-	    height: 30px;
-	}
-
-	td {
-	    text-align: center;
-	    padding: 5px;
-	}
-
-	.form {
-	    margin-top: 20px;
-	}
-
-  /* input[type='file'] {color: red;} */
-
-	#content {
-	    width: 50%;
-	}
-  hr {width:100%; text-align:left;margin-left:0;}
 </style>
 <!--  -->
-<title>Stock Prediction</title>
+<title>Stock Information</title>
+<!-- load jQuery lib -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/stock_info.js') }}"></script>
 </head>
 
 <!--  -->
 <!--  -->
-
 <body>
 <div>
+	<br><br><br><br>
+	<form class="form-class">
+    <label for="tickerInput">Ticker: </label>
+    <input type="text" id="tickerInput" placeholder="Stock Ticker">
+	  <button type="submit">Submit</button>
+	</form>
+</div>
+<hr class="hr-class" />
+<div id="successAlert" role="alert" style="display:none;">
+<!-- display stock info -->
+</div>
+<div class="errorMsg-class" id="errorAlert" role="alert" style="display:none;"></div>
 
-<!-- action='/predict' sends the form information to /predict endpoint, or page -->
-<form action="/predict" method="post" enctype="multipart/form-data">
-<table class="center">
-	<tr>
-    <td>Ticker Name </td>
-		<td>Select Model</td>
-	</tr>
-<!--  -->
-  <tr>
-    <!-- added ticker name textbox -->
-    <td>
-    <input type = 'text' name = 'ticker'/>
-    </td>
-    <td>
-      <select name="comp_select" class="selectpicker form-control">
-      {% for m in modelfiles %}
-      <option value="{{ m }}">{{ m }}</option>
-      {% endfor %}
-      </select>
-    </td>
-  </tr>
-    <td></td>
-  <tr>
-
-  </tr>
-</table>
-<button type="submit" onclick="">Predict</button>
-</form>
-
-<hr>
-How to use this stock predictor:<br><br>
-<li>Provide a valid stock ticker.</li>
-<li>Select a model. </li>
-
+<!-- New division -->
+<br>
+<div>
+<a href="/price_predict"><button>Go to predict stock price</button></a>
+<!-- <input type="button" onclick="location.href='/price_predict';" value="Go to Predict Stock Price" /> -->
 </div>
 </body>
 </html>

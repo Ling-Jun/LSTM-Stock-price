@@ -17,6 +17,32 @@ Set up environment
 >
     $ pip install -r requirements.txt
 
+## Folder structure
+├── .flake8
+├── .gitignore
+├── Flask_webapp
+│   ├── app.py
+│   ├── data_preparation_objects
+│   │   └── scaler.pkl
+│   ├── models
+│   │   ├── model_IBM_2_epochs.h5
+│   │   └── model_IBM_60_epochs.h5
+│   ├── static
+│   └── templates
+│       ├── index.html
+│       └── predict.html
+├── LSTM_predictor
+│   ├── setup.py
+│   └── stockPredictor
+│       ├── dataGenerator.py
+│       ├── predict.py
+│       ├── preload.py
+│       └── train.py
+├── README.md
+├── requirements.txt
+└── runtime.txt
+
+
 ## Dataset
 * We now allow users to provide a simple stock ticker, the price data will be fetched from Yahoo finance.
 

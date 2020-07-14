@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!--  -->
+<style>
+	table, td, th {border: 1px solid #aaa;}
+	table {border-collapse: collapse; width: 50%;}
+	table.center {text-align: center; margin-left: auto; margin-right: auto;}
+	th {height: 30px;}
+	td {text-align: center; padding: 5px;}
+	div.user-manual {text-align: left; padding: 0 0 0 200px; font-size: 20px}
+	hr.hr-class {border-top: 5px double #8c8b8b;}
+	div.errorMsg-class {font-weight: bold; text-align: center; font-size: 25px;
+		 background-color: rgba(255, 0, 0, 0.3);}
+	div.successMsg-class {font-size: 25px;text-align: left; padding: 0 0 0 200px;}
+	img.image-class {display: block; margin-left: auto; margin-right: auto; width: 50%;}
+	/* div.successMsg-class {color: blue; font-weight: bold;} */
+
+</style>
+<!--  -->
+<title>Stock Prediction</title>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/stock_predict.js') }}"></script>
+</head>
+
+<!--  -->
+<!--  -->
+
+<body>
+
+
+<div class="big-container">
+<form method="post" enctype="multipart/form-data">
+	<br><br><br><br>
+<table class="center">
+	<tr><td>Ticker Name </td><td>Select Model</td></tr>
+  <tr>
+    <td><input type = 'text' name = 'ticker' id='tickerInput'/></td>
+    <td>
+    <select name="comp_select" id='modelInput'>
+    {% for m in modelfiles %}
+    <option value="{{ m }}">{{ m }}</option>
+    {% endfor %}
+    </select>
+    </td>
+  </tr>
+</table>
+</div>
+
+<input type="button" onclick="location.href='/';" value="Back" />
+<button type="submit" onclick="">Predict</button>
+</form>
+<hr class="hr-class" />
+<!-- .......................................................... -->
+<div class="successMsg-class" id="successAlert" role="alert" style="display:none;"></div>
+<!-- show image through .js file -->
+<img class="image-class" id= imgElem> </img>
+<div class="errorMsg-class" id="errorMsg" role="alert" style="display:none;"></div>
+
+<br><br><br><br>
+<div class="user-manual">
+How to use this stock predictor:<br><br>
+	<li>Provide a valid stock ticker.</li>
+	<li>Select a model. </li>
+	<li>Press <b>Predict</b> button to predict, press <b>Back</b> button to go back.</li>
+</div>
+
+</body>
+
+</html>

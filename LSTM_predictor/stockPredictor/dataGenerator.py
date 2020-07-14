@@ -12,16 +12,21 @@ def stock_info(ticker):
     """Return stock information."""
     stock = yf.Ticker(ticker)
     info = stock.info
+    # if info.empty:
+    #     raise Exception("Invalid Ticker!")
     return info
 
 
 def data_fetch(ticker):
     """Create price dataframe from a ticker."""
-    if ticker == '':
-        raise ImportError('Please select specify a stock ticker!')
+    # if ticker == '':
+    #     raise ImportError('Please select specify a stock ticker!')
     stock = yf.Ticker(ticker)
-    # get historical market data
+    # get historical market data, period='max' is necessary for hist.empty to work.
+    # if hist=stock.history, then hist.empty would return error!
     hist = stock.history(period="max")
+    if hist.empty:
+        raise Exception("Empty DataFrame!")
     # hist = hist.drop(['Open', 'High', 'Low', 'Close'], axis=1, inplace=True)
     return hist
 
