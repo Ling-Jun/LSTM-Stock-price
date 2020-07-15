@@ -17,7 +17,17 @@ Set up environment
 >
     $ pip install -r requirements.txt
 
+* TO use the App:
+
+Navigate to root folder, run/test on local computer:
+>
+    $ python Flask_webapp/app.py
+
+
+
+
 ## Folder structure
+
 ├── .flake8
 ├── .gitignore
 ├── Flask_webapp
@@ -28,9 +38,13 @@ Set up environment
 │   │   ├── model_IBM_2_epochs.h5
 │   │   └── model_IBM_60_epochs.h5
 │   ├── static
+│   │   └── js
+│   │       ├── stock_info.js
+│   │       └── stock_predict.js
 │   └── templates
 │       ├── index.html
-│       └── predict.html
+│       ├── price_predict.html
+│       └── show_prediction.html
 ├── LSTM_predictor
 │   ├── setup.py
 │   └── stockPredictor

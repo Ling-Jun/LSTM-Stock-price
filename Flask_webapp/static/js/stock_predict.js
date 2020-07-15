@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	$('form').on('submit', function(event) {
+		// some text to decorate the button saying loading
 		$.ajax({
 			data : {
 				ticker : $('#tickerInput').val(),
