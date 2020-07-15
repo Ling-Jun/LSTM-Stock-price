@@ -16,9 +16,8 @@ Set up environment
 
 `$ pip install -r requirements.txt`
 
-* TO use the App:
+* TO use the App: navigate to root folder, run/test on local computer:
 
-Navigate to root folder, run/test on local computer:
 `$ python Flask_webapp/app.py`
 
 
