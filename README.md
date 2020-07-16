@@ -85,4 +85,14 @@ Source: [Medium](https://codeburst.io/generating-text-using-an-lstm-network-no-l
 * .flake8 specifies which linting errors to ignore when using flake8 package. Linting errors are the conventions and practice of best formatting the source code, i.e. two empty lines are recommended from the last line of code to the definition of a new function.
 * runtime.txt: by default, new Python applications on Heroku use the Python runtime indicated in Specifying a Python version.
 * Procfile specifes how to deploy the webapp on [Heroku](https://devcenter.heroku.com/articles/procfile)
-* LSTM_predictor is a custom package written by the author to realize customized functions for the webapp. It is [installed locally](https://github.com/Ling-Jun/example-local-package) by adding the line `-e ./LSTM_predictor` in requirements.txt file. 
+* LSTM_predictor is a custom package written by the author to realize customized functions for the webapp. It is [installed locally](https://github.com/Ling-Jun/example-local-package) by adding the line `-e ./LSTM_predictor` in requirements.txt file.
+
+## Deploy
+* must have gunicorn package specified in requirements.txt file
+* must ensure that you are pushing the branch with your code to heroku master. So instead of:
+
+`$ git push heroku master`
+
+You would do something like:
+
+`$git push heroku (current-branch):master$
