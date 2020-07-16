@@ -89,10 +89,14 @@ Source: [Medium](https://codeburst.io/generating-text-using-an-lstm-network-no-l
 
 ## Deploy
 * must have gunicorn package specified in requirements.txt file
+* must have Procfile Specifying how to run this app
+* must have runtime.txt to specify the language of this app
 * must ensure that you are pushing the branch with your code to heroku master. So instead of:
 
 `$ git push heroku master`
 
 You would do something like:
 
-`$git push heroku (current-branch):master$
+`$git push heroku (current-branch):master$`
+
+__The app is available [here](https://stockpred-zhou.herokuapp.com/)__
