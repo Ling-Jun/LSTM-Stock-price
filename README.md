@@ -88,7 +88,8 @@ Source: [Medium](https://codeburst.io/generating-text-using-an-lstm-network-no-l
 * LSTM_predictor is a custom package written by the author to realize customized functions for the webapp. It is [installed locally](https://github.com/Ling-Jun/example-local-package) by adding the line `-e ./LSTM_predictor` in requirements.txt file.
 
 ## Deploy
-* must have gunicorn package specified in requirements.txt file. gunicorn will split the server into "workers" to process requests in parallel. But that means duplicating the code for each "worker". Heroku might default it to 2, we can try to save on memory by scaling back to 1. We can try setting an env variable `WEB_CONCURRENCY`  to 1, from Heroku dashboard => settings, config vars.The request to our webapp now have to processed **serially** instead of **parralel**. This is specified in the Heroku docs as [config vars](https://devcenter.heroku.com/articles/python-gunicorn#basic-configuration)
+* must have gunicorn package specified in requirements.txt file, otherwise the app won't run on Heroku.
+gunicorn will split the server into "workers" to process requests in parallel. But that means duplicating the code for each "worker". Heroku might default it to 2, we can try to save on memory by scaling back to 1. We can try setting an env variable `WEB_CONCURRENCY`  to 1, from Heroku dashboard => settings, config vars.The request to our webapp now have to processed **serially** instead of **parralel**. This is specified in the Heroku docs as [config vars](https://devcenter.heroku.com/articles/python-gunicorn#basic-configuration)
 
 * must have Procfile Specifying how to run this app
 * must have runtime.txt to specify the language of this app
