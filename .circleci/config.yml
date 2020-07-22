@@ -1,0 +1,28 @@
+# Python CircleCI 2.1 configuration file
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.6
+
+    working_directory: ~/repo
+
+    steps:
+      # Step 1: obtain repo from GitHub, This command automatically gets the branch code for you to work with in subsequent steps.
+      - checkout
+      # Step 2: create virtual env and install dependencies
+      - run:
+          name: install dependencies
+          command: |
+            ls -al
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      # Step 3: run linter and tests
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            # flake8 --exclude=venv* --statistics
+            flake8
+            # pytest -v --cov=calculato, pytest package runs tests on the scritps
