@@ -13,6 +13,7 @@ $(document).ready(function() {
 			}
 			else {
 				// $('#successAlert').text(JSON.stringify(data)).show();
+				// html() function reads html raw code and create html page
 				$('#successAlert').html(data).show();
 				$('#errorAlert').hide();
 			}
