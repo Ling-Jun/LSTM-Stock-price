@@ -55,7 +55,7 @@ Set up environment
 ```
 
 ## Dataset
-* We now allow users to provide a simple stock ticker, the price data will be fetched from Yahoo finance.
+* We now allow users to provide a simple stock ticker. The price data will be fetched from Yahoo finance.
 
 
 
@@ -80,20 +80,20 @@ Source: [Medium](https://codeburst.io/generating-text-using-an-lstm-network-no-l
 
 ## Technical Details
 
-* requirements.txt specifies the dependencies of this webapp, it is generated with [pipreqs](https://github.com/bndr/pipreqs) package.
-* .gitignore specifies which files and folders to ignore when pushing to Git remote, i.e. Github.
-* .flake8 specifies which linting errors to ignore when using flake8 package. Linting errors are the conventions and practice of best formatting the source code, i.e. two empty lines are recommended from the last line of code to the definition of a new function.
-* runtime.txt: by default, new Python applications on Heroku use the Python runtime indicated in Specifying a Python version.
-* Procfile specifes how to deploy the webapp on [Heroku](https://devcenter.heroku.com/articles/procfile)
-* LSTM_predictor is a custom package written by the author to realize customized functions for the webapp. It is [installed locally](https://github.com/Ling-Jun/example-local-package) by adding the line `-e ./LSTM_predictor` in requirements.txt file.
+* `requirements.txt` specifies the dependencies of this webapp, it is generated with [pipreqs](https://github.com/bndr/pipreqs) package.
+* `.gitignore` specifies which files and folders to ignore when pushing to Git remote, i.e. Github.
+* `.flake8` specifies which linting errors to ignore when using flake8 package. Linting errors are the conventions and practice of best formatting the source code, i.e. two empty lines are recommended from the last line of code to the definition of a new function.
+* `runtime.txt`: by default, new Python applications on Heroku use the Python runtime indicated in Specifying a Python version.
+* `Procfile` specifes how to deploy the webapp on [Heroku](https://devcenter.heroku.com/articles/procfile)
+* `LSTM_predictor` is a custom package written by the author to realize customized functions for the webapp. It is [installed locally](https://github.com/Ling-Jun/example-local-package) by adding the line `-e ./LSTM_predictor` in requirements.txt file.
 
 ## Deploy
-* must have gunicorn package specified in requirements.txt file, otherwise the app won't run on Heroku.
+* Must have gunicorn package specified in requirements.txt file, otherwise the app won't run on Heroku.
 gunicorn will split the server into "workers" to process requests in parallel. But that means duplicating the code for each "worker". Heroku might default it to 2, we can try to save on memory by scaling back to 1. We can try setting an env variable `WEB_CONCURRENCY`  to 1, from Heroku dashboard => settings, config vars.The request to our webapp now have to processed **serially** instead of **parralel**. This is specified in the Heroku docs as [config vars](https://devcenter.heroku.com/articles/python-gunicorn#basic-configuration)
 
-* must have Procfile Specifying how to run this app
-* must have runtime.txt to specify the language of this app
-* must ensure that you are pushing the branch with your code to heroku master. So instead of:
+* Must have Procfile Specifying how to run this app
+* Must have runtime.txt to specify the language of this app
+* Must ensure that you are pushing the branch with your code to heroku master. So instead of:
 
 `$ git push heroku master`
 
