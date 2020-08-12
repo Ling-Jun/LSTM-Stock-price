@@ -19,12 +19,14 @@
 	div.successMsg-class {font-size: 25px;text-align: left; padding: 0 0 0 200px;}
 	img.image-class {display: block; margin-left: auto; margin-right: auto; width: 50%;}
 	/* div.successMsg-class {color: blue; font-weight: bold;} */
-
 </style>
 <!--  -->
 <title>Stock Prediction</title>
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+
+<!-- ****** use JS jquery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!--****** send the data to stock_predict.js script for further execution ****** -->
 <script src="{{ url_for('static', filename='js/stock_predict.js') }}"></script>
 </head>
 
@@ -42,11 +44,11 @@
   <tr>
     <td><input type = 'text' name = 'ticker' id='tickerInput'/></td>
     <td>
-    <select name="comp_select" id='modelInput'>
-    {% for m in modelfiles %}
-    <option value="{{ m }}">{{ m }}</option>
-    {% endfor %}
-    </select>
+    	<select name="comp_select" id='modelInput'>
+    	{% for m in modelfiles %}
+    	<option value="{{ m }}">{{ m }}</option>
+    	{% endfor %}
+    	</select>
     </td>
   </tr>
 </table>

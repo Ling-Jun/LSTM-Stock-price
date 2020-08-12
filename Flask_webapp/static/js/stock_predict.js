@@ -1,13 +1,19 @@
 $(document).ready(function() {
+	// takes data from the HTML 'form, there's ONLY ONE form in the HTML in our case,
 	$('form').on('submit', function(event) {
 		// some text to decorate the button saying loading
 		$.ajax({
+			// is "data" an AJAX keyword?
 			data : {
+				// # is followed by the element ID in html
 				ticker : $('#tickerInput').val(),
 				model : $('#modelInput').val()
 				},
 			type : 'POST',
+			// POSTs the data to "/show_prediction" endpoint in app.py to run the ML model
 			url : '/show_prediction'})
+			//.then(function()){}
+			//when the process is DONE through endpoint/backend "/show_prediction", execute the function in .done()
 		.done(function(data) {
 			if (data.error) {
 				$('#errorMsg').text(data.error).show();
