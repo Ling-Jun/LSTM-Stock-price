@@ -41,6 +41,7 @@ def choose_model(select):
     """Make sure we choose a model."""
     try:
         model = load_model('Flask_webapp/models/' + str(select))
+        # model = load_model('/models/' + str(select))
     except Exception:
         raise ImportError("Please choose a model!")
         # print(colored("Choose a model!", 'red'))

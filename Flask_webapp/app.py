@@ -38,6 +38,7 @@ def process():
 def pred():
     # relative path of models folder
     onlyfiles = preload.list_models('/Flask_webapp/models')
+    # onlyfiles = preload.list_models('/models')
     # send ML models to index.html page, no value is taken from html pages
     return render_template('price_predict.html', modelfiles=onlyfiles)
 
@@ -60,12 +61,18 @@ def show_pred():
     split_point = dataGenerator.data_split_point(start, end, ratio=0.1)
     _, test_target = train.train_test_split(dataset, train_end=str(split_point - 1), test_start=str(split_point))
 
+
+    # model = preload.choose_model(select)
+
+
     # load models and data transfomation objects
     try:
         model = preload.choose_model(select)
     except ImportError:
         # return "Please choose a model!!"
         return jsonify({'error': "No model was selected. Please choose a model!"})
+
+
     scaler = load(open('Flask_webapp/data_preparation_objects/scaler.pkl', 'rb'))
     # specify the right path
     test_input = predict.create_test_input(dataset, scaler, input_start=str(split_point))
