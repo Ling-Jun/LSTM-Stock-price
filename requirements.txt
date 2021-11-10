@@ -3,7 +3,7 @@ matplotlib==3.2.1
 Flask==1.1.2
 pandas==1.0.4
 lxml==4.5.1
-tensorflow==2.4.0
+tensorflow==2.5.2
 yfinance==0.1.54
 Keras==2.3.1
 numpy==1.18.5
