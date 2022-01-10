@@ -61,9 +61,7 @@ def show_pred():
     split_point = dataGenerator.data_split_point(start, end, ratio=0.1)
     _, test_target = train.train_test_split(dataset, train_end=str(split_point - 1), test_start=str(split_point))
 
-
     # model = preload.choose_model(select)
-
 
     # load models and data transfomation objects
     try:
@@ -71,7 +69,6 @@ def show_pred():
     except ImportError:
         # return "Please choose a model!!"
         return jsonify({'error': "No model was selected. Please choose a model!"})
-
 
     scaler = load(open('Flask_webapp/data_preparation_objects/scaler.pkl', 'rb'))
     # specify the right path

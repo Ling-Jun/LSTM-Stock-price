@@ -2,3 +2,4 @@ __pycache__
 mlruns
 *.egg-info
 LSTM_app_env
+tests/__pycache__
